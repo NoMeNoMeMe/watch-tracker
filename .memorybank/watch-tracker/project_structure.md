@@ -1,0 +1,1 @@
+The project is a monorepo with two packages: `server` and `web`. The `server` package contains the back-end application, and the `web` package contains the front-end application.

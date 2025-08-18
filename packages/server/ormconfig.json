@@ -1,0 +1,9 @@
+  {
+    "skip": false,
+    "name": "sqlite",
+    "type": "sqlite",
+    "database": "./watch-tracker.db",
+    "logging": false,
+    "relationLoadStrategy": "join",
+    "entities": ["./src/domain/entities/*.ts"]
+  }

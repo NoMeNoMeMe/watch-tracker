@@ -1,0 +1,1 @@
+The server is a Node.js application built with Express and TypeScript. It uses a SQLite database for storage. The web client is a React application, also using TypeScript, and styled with Tailwind CSS.

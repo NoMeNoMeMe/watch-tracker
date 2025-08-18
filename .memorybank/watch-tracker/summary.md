@@ -1,0 +1,1 @@
+This is a monorepo for a watch tracker application. It's composed of a server and a web client. The server is a Node.js application using Express, and the web client is a React application.
