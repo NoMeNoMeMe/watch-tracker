@@ -1,0 +1,79 @@
+// Folder-specific settings
+//
+// For a full list of overridable settings, and general information on folder-specific settings,
+// see the documentation: https://zed.dev/docs/configuring-zed#settings-files
+{
+  "minimap": {
+    "show": "auto",
+    "thumb": "always",
+    "thumb_border": "left_open",
+    "current_line_highlight": null
+  },
+  "languages": {
+    "TypeScript": {
+      "code_actions_on_format": {
+        "source.organizeImports": true,
+        "source.fixAll.eslint": true,
+        "source.fixAll.tslint": true
+      }
+    },
+    "TSX": {
+      "code_actions_on_format": {
+        "source.organizeImports": true,
+        "source.fixAll.eslint": true,
+        "source.fixAll.tslint": true
+      }
+    }
+  },
+  "git": {
+    "git_gutter": "tracked_files",
+    "inline_blame": {
+      "enabled": true
+    },
+    "hunk_style": "staged_hollow"
+  },
+  "indent_guides": {
+    "enabled": true,
+    "coloring": "indent_aware",
+    "background_coloring": "indent_aware"
+  },
+  "inlay_hints": {
+    "enabled": true,
+    "show_type_hints": true,
+    "show_parameter_hints": true,
+    "show_other_hints": true,
+    "show_background": true,
+    "edit_debounce_ms": 700,
+    "scroll_debounce_ms": 50,
+    "toggle_on_modifiers_press": null
+  },
+  "remove_trailing_whitespace_on_save": true,
+  "show_call_status_icon": false,
+  "soft_wrap": "editor_width",
+  "project_panel": {
+    "button": true,
+    "default_width": 240,
+    "dock": "left",
+    "entry_spacing": "comfortable",
+    "file_icons": true,
+    "folder_icons": true,
+    "git_status": true,
+    "indent_size": 10,
+    "auto_reveal_entries": true,
+    "auto_fold_dirs": true,
+    "scrollbar": {
+      "show": null
+    },
+    "show_diagnostics": "all",
+    "indent_guides": {
+      "show": "always"
+    },
+    "hide_root": false
+  },
+  "unnecessary_code_fade": 0.5,
+  "ui_font_features": {
+    "calt": true,
+    "ss01": true,
+    "ss02": true
+  }
+}
