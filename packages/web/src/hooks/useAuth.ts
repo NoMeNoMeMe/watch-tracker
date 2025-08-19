@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
-import type { User, AuthResponse } from '../types';
+import { useEffect, useState } from 'react';
+import notify from '../helpers/notify';
 import { useAuthStore } from '../store/authStore';
+import type { AuthResponse, User } from '../types';
 
 interface UseAuthReturn {
   userId: number | null;
@@ -8,7 +9,6 @@ interface UseAuthReturn {
   isAuthenticated: boolean;
   user: User | null;
   loading: boolean;
-  error: string | null;
   handleAuthSuccess: (authData: AuthResponse) => void;
   handleLogout: () => void;
   login: (username: string, password: string) => Promise<boolean>;
@@ -19,7 +19,6 @@ const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 export const useAuth = (): UseAuthReturn => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const {
      user,
      userId,
@@ -47,7 +46,6 @@ export const useAuth = (): UseAuthReturn => {
 
   const login = async (username: string, password: string): Promise<boolean> => {
     setLoading(true);
-    setError(null);
 
     try {
       const response = await fetch(`${baseUrl}/auth/login`, {
@@ -83,7 +81,7 @@ export const useAuth = (): UseAuthReturn => {
 
       return true;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      notify({ type: 'error', message: 'Login failed', logToConsole: true, error: err as Error });
       return false;
     } finally {
       setLoading(false);
@@ -92,7 +90,6 @@ export const useAuth = (): UseAuthReturn => {
 
   const register = async (username: string, password: string): Promise<boolean> => {
      setLoading(true);
-     setError(null);
 
      try {
        const regResponse = await fetch(`${baseUrl}/auth/register`, {
@@ -140,7 +137,7 @@ export const useAuth = (): UseAuthReturn => {
 
        return true;
      } catch (err) {
-       setError(err instanceof Error ? err.message : 'Registration failed');
+       notify({ type: 'error', message: 'Registration failed', logToConsole: true, error: err as Error });
        return false;
      } finally {
        setLoading(false);
@@ -153,7 +150,6 @@ export const useAuth = (): UseAuthReturn => {
     isAuthenticated,
     user,
     loading,
-    error,
     handleAuthSuccess,
     handleLogout: logout,
     login,

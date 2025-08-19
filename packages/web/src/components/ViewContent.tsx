@@ -1,8 +1,8 @@
 import React from 'react';
+import type { BookResult, MediaType, OmdbResult, ViewType, WatchedItem } from '../types';
 import Search from './Search';
 import SearchResults from './SearchResults';
 import WatchedList from './WatchedList';
-import type { ViewType, MediaType, OmdbResult, BookResult, WatchedItem } from '../types';
 
 interface ViewContentProps {
   view: ViewType;
@@ -11,7 +11,6 @@ interface ViewContentProps {
   searchResults: (OmdbResult | BookResult)[];
   mediaType: MediaType;
   searchLoading: boolean;
-  searchError: string | null;
   currentPage: number;
   totalPages: number;
   onItemClick: (item: OmdbResult | BookResult) => void;
@@ -20,7 +19,6 @@ interface ViewContentProps {
   // Watched list related props
   watchedItems: WatchedItem[];
   watchedLoading: boolean;
-  watchedError: string | null;
   watchedFilter: string;
   onFilterChange: (filter: string) => void;
   onEditClick: (item: WatchedItem) => void;
@@ -33,7 +31,6 @@ const ViewContent: React.FC<ViewContentProps> = ({
   searchResults,
   mediaType,
   searchLoading,
-  searchError,
   currentPage,
   totalPages,
   onItemClick,
@@ -41,7 +38,6 @@ const ViewContent: React.FC<ViewContentProps> = ({
   onNextPage,
   watchedItems,
   watchedLoading,
-  watchedError,
   watchedFilter,
   onFilterChange,
   onEditClick,
@@ -55,7 +51,6 @@ const ViewContent: React.FC<ViewContentProps> = ({
           searchResults={searchResults}
           mediaType={mediaType}
           loading={searchLoading}
-          error={searchError}
           currentPage={currentPage}
           totalPages={totalPages}
           onItemClick={onItemClick}
@@ -71,7 +66,6 @@ const ViewContent: React.FC<ViewContentProps> = ({
       <WatchedList
         watchedItems={watchedItems}
         loading={watchedLoading}
-        error={watchedError}
         watchedFilter={watchedFilter}
         onFilterChange={onFilterChange}
         onEditClick={onEditClick}

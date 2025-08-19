@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import type { OmdbResult, BookResult } from '../types';
+import { useEffect, useState } from 'react';
+import notify from '../helpers/notify';
+import type { BookResult, OmdbResult } from '../types';
 
 interface DetailedOmdbResult extends OmdbResult {
   Plot?: string;
@@ -22,14 +23,12 @@ type DetailedItem = DetailedOmdbResult | BookResult;
 const useFetchDetailedInfo = (item: OmdbResult | BookResult) => {
   const [detailedItem, setDetailedItem] = useState<DetailedItem | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const baseURL = import.meta.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
     const fetchData = async () => {
       if ('imdbID' in item) {
         setLoading(true);
-        setError(null);
         try {
           const response = await fetch(`${baseURL}/external/search/omdb-details?id=${item.imdbID}`);
           if (response.ok) {
@@ -42,8 +41,7 @@ const useFetchDetailedInfo = (item: OmdbResult | BookResult) => {
             throw new Error(`Server error: ${response.status}`);
           }
         } catch (err) {
-          console.error('Failed to fetch detailed info:', err);
-          setError(err instanceof Error ? err.message : 'Failed to load detailed information');
+          notify({ type: 'error', message: 'Failed to fetch detailed information', logToConsole: true, error: err as Error });
           setDetailedItem(item);
         } finally {
           setLoading(false);
@@ -56,7 +54,7 @@ const useFetchDetailedInfo = (item: OmdbResult | BookResult) => {
     fetchData();
   }, [item]);
 
-  return { detailedItem, loading, error };
+  return { detailedItem, loading };
 };
 
 export default useFetchDetailedInfo;

@@ -1,11 +1,10 @@
 import React from 'react';
-import ItemCard from './shared/ItemCard';
 import type { WatchedItem } from '../types';
+import ItemCard from './shared/ItemCard';
 
 interface WatchedListProps {
   watchedItems: WatchedItem[];
   loading: boolean;
-  error: string | null;
   watchedFilter: string;
   onFilterChange: (filter: string) => void;
   onEditClick: (item: WatchedItem) => void;
@@ -15,7 +14,6 @@ interface WatchedListProps {
 const WatchedList: React.FC<WatchedListProps> = ({
   watchedItems,
   loading,
-  error,
   watchedFilter,
   onFilterChange,
   onEditClick,
@@ -30,34 +28,10 @@ const WatchedList: React.FC<WatchedListProps> = ({
     );
   }
 
-  if (error) {
-    return (
-      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-        <strong>Error:</strong> {error}
-      </div>
-    );
-  }
-
   const filteredItems = watchedItems.filter(item => {
     if (watchedFilter === 'all') return true;
     return item.status === watchedFilter;
   });
-
-  // const getStatusBadgeColor = (status: string) => {
-  //   switch (status) {
-  //     case 'completed':
-  //       return 'bg-green-100 text-green-800';
-  //     case 'pending':
-  //       return 'bg-blue-100 text-blue-800';
-  //     case 'planning':
-  //       return 'bg-yellow-100 text-yellow-800';
-  //     case 'not_started':
-  //     case 'on_hold':
-  //     case 'dropped':
-  //     default:
-  //       return 'bg-gray-100 text-gray-800';
-  //   }
-  // };
 
   const formatStatus = (status: string) => {
     switch (status) {

@@ -1,10 +1,10 @@
-import { useState, useCallback } from 'react';
-import type { OmdbResult, BookResult, MediaType } from '../types';
+import { useCallback, useState } from 'react';
+import notify from '../helpers/notify';
+import type { BookResult, MediaType, OmdbResult } from '../types';
 
 interface UseSearchReturn {
   searchResults: (OmdbResult | BookResult)[];
   loading: boolean;
-  error: string | null;
   currentPage: number;
   totalPages: number;
   query: string;
@@ -17,7 +17,6 @@ interface UseSearchReturn {
 export const useSearch = (): UseSearchReturn => {
   const [searchResults, setSearchResults] = useState<(OmdbResult | BookResult)[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [query, setQuery] = useState('');
@@ -27,12 +26,11 @@ export const useSearch = (): UseSearchReturn => {
   const handleSearch = useCallback(async (searchQuery: string, type: MediaType, page: number = 1) => {
     const baseURL = import.meta.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
     if (!searchQuery.trim()) {
-      setError('Please enter a search query');
+      notify({ type: 'error', message: 'Please enter a search query', logToConsole: true });
       return;
     }
 
     setLoading(true);
-    setError(null);
     setQuery(searchQuery);
     setMediaType(type);
     setCurrentPage(page);
@@ -83,7 +81,7 @@ export const useSearch = (): UseSearchReturn => {
       setSearchResults(results);
       setTotalPages(Math.ceil(totalResults / 10));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Search failed');
+      notify({ type: 'error', message: 'Search failed', logToConsole: true, error: err as Error });
       setSearchResults([]);
       setTotalPages(0);
     } finally {
@@ -108,14 +106,12 @@ export const useSearch = (): UseSearchReturn => {
     setQuery('');
     setCurrentPage(1);
     setTotalPages(1);
-    setError(null);
     setLoading(false);
   }, []);
 
   return {
     searchResults,
     loading,
-    error,
     currentPage,
     totalPages,
     query,

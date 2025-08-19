@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import type { MediaType, OmdbResult, BookResult } from '../types';
-import { useImageWithFallback } from '../hooks/useImageWithFallback';
 import useFetchDetailedInfo from '../hooks/useFetchDetailedInfo';
+import { useImageWithFallback } from '../hooks/useImageWithFallback';
+import type { BookResult, MediaType, OmdbResult } from '../types';
 
 interface DetailedItemModalProps {
   item: OmdbResult | BookResult;
@@ -20,7 +20,7 @@ const DetailedItemModal: React.FC<DetailedItemModalProps> = ({
   const [currentEpisode, setCurrentEpisode] = useState(0);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
-  const { detailedItem, loading, error } = useFetchDetailedInfo(item);
+  const { detailedItem, loading } = useFetchDetailedInfo(item);
 
   // Get basic info for display
   const getTitle = (): string => {
@@ -260,13 +260,6 @@ const DetailedItemModal: React.FC<DetailedItemModalProps> = ({
                 <div className="flex items-center space-x-2">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
                   <span className="text-sm text-gray-500">Loading details...</span>
-                </div>
-              ) : error ? (
-                <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
-                  <p className="text-sm">
-                    <strong>Note:</strong> {error}
-                  </p>
-                  <p className="text-xs mt-1">Showing basic information only.</p>
                 </div>
               ) : null}
 
