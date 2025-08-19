@@ -20,7 +20,7 @@ const Search: React.FC<SearchProps> = ({ onSearch }) => {
     onSearch(query, type);
   };
 
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       onSearch(query, type);
     }
@@ -34,7 +34,7 @@ const Search: React.FC<SearchProps> = ({ onSearch }) => {
         className="w-full max-w-lg px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         value={query}
         onChange={handleInputChange}
-        onKeyPress={handleKeyPress}
+        onKeyDown={handleKeyDown}
       />
       <select
         value={type}

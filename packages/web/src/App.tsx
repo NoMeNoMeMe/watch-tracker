@@ -1,15 +1,16 @@
 import { useState } from 'react';
-import Layout from './components/Layout';
+import { Bounce, ToastContainer } from 'react-toastify';
 import AuthForm from './components/AuthForm';
+import FormsManager from './components/FormsManager';
+import Layout from './components/Layout';
 import Navigation from './components/Navigation';
 import ViewContent from './components/ViewContent';
-import FormsManager from './components/FormsManager';
-import { ToastContainer, Bounce, toast } from 'react-toastify';
-import { useAuthStore } from './store/authStore';
-import { useWatchedItems } from './hooks/useWatchedItems';
-import { useSearch } from './hooks/useSearch';
+import notify from './helpers/notify';
 import { useFormManager } from './hooks/useFormManager';
-import type { ViewType, MediaType, OmdbResult, BookResult, WatchedItem } from './types';
+import { useSearch } from './hooks/useSearch';
+import { useWatchedItems } from './hooks/useWatchedItems';
+import { useAuthStore } from './store/authStore';
+import type { BookResult, MediaType, OmdbResult, ViewType, WatchedItem } from './types';
 
 function App() {
   const { userId, accessToken, isAuthenticated, logout } = useAuthStore();
@@ -20,13 +21,6 @@ function App() {
   const [view, setView] = useState<ViewType>('search');
   const [watchedFilter, setWatchedFilter] = useState<string>('all');
   const [mediaType, setMediaType] = useState<MediaType>('movie');
-
-  // Fetch watched items when switching to watched view
-  // useEffect(() => {
-  //   if (userId && view === 'watched') {
-  //     watchedItemsHook.fetchWatchedItems();
-  //   }
-  // }, [userId, view, watchedItemsHook]);
 
   const handleViewChange = (newView: ViewType) => {
     setView(newView);
@@ -51,13 +45,12 @@ function App() {
   };
 
   const handleAddClick = (item: OmdbResult | BookResult) => {
-    console.log('App: Item clicked for adding:', item);
     formManager.showAddForm(item);
   };
 
   const handleAddToWatched = async (status: string, currentEpisode: number) => {
     if (!formManager.selectedItem) {
-      watchedItemsHook.setError('Please select an item to add to your watched list.');
+      notify({ type: 'error', message: 'Please select an item to add to your watched list.', logToConsole: true });
       return;
     }
 
@@ -68,30 +61,10 @@ function App() {
     );
 
     if (success) {
-      toast.success('Item added successfully!', {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      });
+      notify({ type: 'success', message: 'Item added successfully!' });
       formManager.hideAddForm();
     } else {
-      toast.error('Failed to add item!', {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      });
+      notify({ type: 'error', message: 'Failed to add item!', logToConsole: true });
     }
   };
 
@@ -101,7 +74,7 @@ function App() {
 
   const handleUpdateWatchedItem = async (id: number, status: string, currentEpisode: number) => {
     if (!formManager.itemToEdit) {
-      watchedItemsHook.setError('No item selected for editing.');
+      notify({ type: 'error', message: 'No item selected for editing!', logToConsole: true });
       return;
     }
 
@@ -113,59 +86,19 @@ function App() {
     );
 
     if (success) {
-      toast.success('Item updated successfully!', {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      });
+      notify({ type: 'success', message: 'Item updated successfully!' });
       formManager.hideEditForm();
     } else {
-      toast.error('Failed to update item!', {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      });
+      notify({ type: 'error', message: 'Failed to update item!' });
     }
   };
 
   const handleDeleteClick = async (id: number) => {
     const success = await watchedItemsHook.deleteWatchedItem(id);
     if (success) {
-      toast.success('Item deleted successfully!', {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      });
+      notify({ type: 'success', message: 'Item deleted successfully!' });
     } else {
-      toast.error('Failed to delete item!', {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      });
+      notify({ type: 'error', message: 'Failed to delete item!' });
     }
   };
 
@@ -173,6 +106,19 @@ function App() {
     return (
       <Layout>
         <AuthForm />
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+          transition={Bounce}
+        />
       </Layout>
     );
   }
@@ -192,7 +138,6 @@ function App() {
         searchResults={searchHook.searchResults}
         mediaType={mediaType}
         searchLoading={searchHook.loading}
-        searchError={searchHook.error}
         currentPage={searchHook.currentPage}
         totalPages={searchHook.totalPages}
         onItemClick={handleAddClick}
@@ -201,7 +146,6 @@ function App() {
         // Watched list related props
         watchedItems={watchedItemsHook.watchedItems}
         watchedLoading={watchedItemsHook.loading}
-        watchedError={watchedItemsHook.error}
         watchedFilter={watchedFilter}
         onFilterChange={setWatchedFilter}
         onEditClick={handleEditClick}

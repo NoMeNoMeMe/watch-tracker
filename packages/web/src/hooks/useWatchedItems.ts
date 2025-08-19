@@ -1,15 +1,14 @@
-import { useState, useCallback } from 'react';
-import type { WatchedItem, OmdbResult, BookResult, MediaType } from '../types';
+import { useCallback, useState } from 'react';
+import notify from '../helpers/notify';
+import type { BookResult, MediaType, OmdbResult, WatchedItem } from '../types';
 
 interface UseWatchedItemsReturn {
   watchedItems: WatchedItem[];
   loading: boolean;
-  error: string | null;
   fetchWatchedItems: () => Promise<void>;
   addWatchedItem: (item: OmdbResult | BookResult, status: string, currentEpisode: number) => Promise<boolean>;
   updateWatchedItem: (id: number, status: string, currentEpisode: number, originalItem: WatchedItem) => Promise<boolean>;
   deleteWatchedItem: (id: number) => Promise<boolean>;
-  setError: (error: string | null) => void;
 }
 
 
@@ -17,13 +16,11 @@ export const useWatchedItems = (userId: number | null, accessToken: string | nul
   const baseUrl = import.meta.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
   const [watchedItems, setWatchedItems] = useState<WatchedItem[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const fetchWatchedItems = useCallback(async () => {
     if (!userId || !accessToken) return;
 
     setLoading(true);
-    setError(null);
 
     try {
       const response = await fetch(`${baseUrl}/watched/${userId}`, {
@@ -68,7 +65,7 @@ export const useWatchedItems = (userId: number | null, accessToken: string | nul
 
       setWatchedItems(watchedItems);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch watched items');
+      notify({ type: 'error', message: 'Failed to fetch watched items', logToConsole: true, error: err as Error });
     } finally {
       setLoading(false);
     }
@@ -80,12 +77,11 @@ export const useWatchedItems = (userId: number | null, accessToken: string | nul
     currentEpisode: number
   ): Promise<boolean> => {
     if (!userId || !accessToken) {
-      setError('User not authenticated');
+      notify({ type: 'error', message: 'User not authenticated', logToConsole: true });
       return false;
     }
 
     setLoading(true);
-    setError(null);
 
     try {
       // Determine media type and extract relevant data
@@ -138,7 +134,7 @@ export const useWatchedItems = (userId: number | null, accessToken: string | nul
       await fetchWatchedItems();
       return true;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to add watched item');
+      notify({ type: 'error', message: 'Failed to add watched item', logToConsole: true, error: err as Error });
       return false;
     } finally {
       setLoading(false);
@@ -152,12 +148,11 @@ export const useWatchedItems = (userId: number | null, accessToken: string | nul
     originalItem: WatchedItem
   ): Promise<boolean> => {
     if (!userId || !accessToken) {
-      setError('User not authenticated');
+      notify({ type: 'error', message: 'User not authenticated', logToConsole: true });
       return false;
     }
 
     setLoading(true);
-    setError(null);
 
     try {
       const updatedPayload = {
@@ -188,7 +183,7 @@ export const useWatchedItems = (userId: number | null, accessToken: string | nul
       await fetchWatchedItems();
       return true;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update watched item');
+      notify({ type: 'error', message: 'Failed to update watched item', logToConsole: true, error: err as Error });
       return false;
     } finally {
       setLoading(false);
@@ -197,12 +192,11 @@ export const useWatchedItems = (userId: number | null, accessToken: string | nul
 
   const deleteWatchedItem = async (id: number): Promise<boolean> => {
     if (!userId || !accessToken) {
-      setError('User not authenticated');
+      notify({ type: 'error', message: 'User not authenticated', logToConsole: true });
       return false;
     }
 
     setLoading(true);
-    setError(null);
 
     try {
       const response = await fetch(`${baseUrl}/watched/${id}`, {
@@ -221,25 +215,19 @@ export const useWatchedItems = (userId: number | null, accessToken: string | nul
       await fetchWatchedItems();
       return true;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete watched item');
+      notify({ type: 'error', message: 'Failed to delete watched item', logToConsole: true, error: err as Error });
       return false;
     } finally {
       setLoading(false);
     }
   };
 
-  const setErrorHandler = (error: string | null) => {
-    setError(error);
-  };
-
   return {
     watchedItems,
     loading,
-    error,
     fetchWatchedItems,
     addWatchedItem,
     updateWatchedItem,
     deleteWatchedItem,
-    setError: setErrorHandler,
   };
 };
