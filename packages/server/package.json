@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "server",
   "version": "1.0.0",
   "description": "",
@@ -12,8 +13,8 @@
     "check-types": "tsc --noEmit"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Mateusz Witkowski",
+  "license": "MIT",
   "type": "commonjs",
   "dependencies": {
     "@types/bcrypt": "^6.0.0",

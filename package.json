@@ -1,4 +1,5 @@
 {
+  "private": true,
   "packageManager": "npm@11.4.2",
   "name": "watch-tracker",
   "type": "module",
