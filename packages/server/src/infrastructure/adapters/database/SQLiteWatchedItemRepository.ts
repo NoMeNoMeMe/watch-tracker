@@ -1,6 +1,6 @@
+import { DataSource } from "typeorm";
 import { WatchedItem } from "../../../domain/entities/WatchedItem";
 import { WatchedItemRepository } from "../../../domain/repositories/WatchedItemRepository";
-import { DataSource } from "typeorm";
 import { databaseConnection } from "./DatabaseConnection";
 
 export class SQLiteWatchedItemRepository implements WatchedItemRepository {
@@ -20,9 +20,11 @@ export class SQLiteWatchedItemRepository implements WatchedItemRepository {
 
     async findById(id: number): Promise<WatchedItem | null> {
         const item = await this.dataSource.getRepository(WatchedItem).findOne({ where: { id } });
-        if (!item) {
-            return null;
-        }
+        return item;
+    }
+
+    async findByUserIdAndMediaId(userId: number, mediaId: string): Promise<WatchedItem | null> {
+        const item = await this.dataSource.getRepository(WatchedItem).findOne({ where: { userId, mediaId } });
         return item;
     }
 

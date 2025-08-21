@@ -1,14 +1,20 @@
-import { AddWatchedItemCommand } from "../commands/AddWatchedItemCommand";
-import { UpdateWatchedItemCommand } from "../commands/UpdateWatchedItemCommand";
-import { DeleteWatchedItemCommand } from "../commands/DeleteWatchedItemCommand";
-import { GetWatchedItemsQuery } from "../queries/GetWatchedItemsQuery";
 import { WatchedItem } from "../../domain/entities/WatchedItem";
 import { WatchedItemRepository } from "../../domain/repositories/WatchedItemRepository";
+import { AddWatchedItemCommand } from "../commands/AddWatchedItemCommand";
+import { DeleteWatchedItemCommand } from "../commands/DeleteWatchedItemCommand";
+import { UpdateWatchedItemCommand } from "../commands/UpdateWatchedItemCommand";
+import { GetWatchedItemsQuery } from "../queries/GetWatchedItemsQuery";
 
 export class WatchedItemService {
     constructor(private readonly watchedItemRepository: WatchedItemRepository) {}
 
     async addWatchedItem(command: AddWatchedItemCommand): Promise<WatchedItem> {
+        // Check if an item with the same userId and mediaId already exists
+        const existingItem = await this.watchedItemRepository.findByUserIdAndMediaId(command.userId, command.mediaId);
+        if (existingItem) {
+            throw new Error("This item was already added");
+        }
+
         const newItem = new WatchedItem(
             command.userId,
             command.mediaType,
