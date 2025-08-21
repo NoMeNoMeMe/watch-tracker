@@ -21,6 +21,7 @@ interface ViewContentProps {
   watchedLoading: boolean;
   watchedFilter: string;
   onFilterChange: (filter: string) => void;
+  onWatchedItemClick: (item: WatchedItem) => void;
   onEditClick: (item: WatchedItem) => void;
   onDeleteClick: (id: number) => void;
 }
@@ -33,7 +34,6 @@ const ViewContent: React.FC<ViewContentProps> = ({
   searchLoading,
   currentPage,
   totalPages,
-  onItemClick,
   onPreviousPage,
   onNextPage,
   watchedItems,
@@ -41,6 +41,8 @@ const ViewContent: React.FC<ViewContentProps> = ({
   watchedFilter,
   onFilterChange,
   onEditClick,
+  onItemClick,
+  onWatchedItemClick,
   onDeleteClick,
 }) => {
   if (view === 'search') {
@@ -68,6 +70,7 @@ const ViewContent: React.FC<ViewContentProps> = ({
         loading={watchedLoading}
         watchedFilter={watchedFilter}
         onFilterChange={onFilterChange}
+        onItemClick={onWatchedItemClick}
         onEditClick={onEditClick}
         onDeleteClick={onDeleteClick}
       />

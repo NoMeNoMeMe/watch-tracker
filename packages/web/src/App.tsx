@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Bounce, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import AuthForm from './components/AuthForm';
 import FormsManager from './components/FormsManager';
 import Layout from './components/Layout';
@@ -46,6 +46,10 @@ function App() {
 
   const handleAddClick = (item: OmdbResult | BookResult) => {
     formManager.showAddForm(item);
+  };
+
+  const handleWatchedItemClick = (item: WatchedItem) => {
+    formManager.showWatchedItemForm(item);
   };
 
   const handleAddToWatched = async (status: string, currentEpisode: number) => {
@@ -113,11 +117,9 @@ function App() {
           newestOnTop={false}
           closeOnClick={false}
           rtl={false}
-          pauseOnFocusLoss
           draggable
           pauseOnHover
           theme="colored"
-          transition={Bounce}
         />
       </Layout>
     );
@@ -141,6 +143,7 @@ function App() {
         currentPage={searchHook.currentPage}
         totalPages={searchHook.totalPages}
         onItemClick={handleAddClick}
+        onWatchedItemClick={handleWatchedItemClick}
         onPreviousPage={searchHook.searchPreviousPage}
         onNextPage={searchHook.searchNextPage}
         // Watched list related props
@@ -172,11 +175,9 @@ function App() {
         newestOnTop={false}
         closeOnClick={false}
         rtl={false}
-        pauseOnFocusLoss
         draggable
         pauseOnHover
         theme="colored"
-        transition={Bounce}
       />
     </Layout>
   );
