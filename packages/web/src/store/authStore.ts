@@ -17,7 +17,6 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
   handleAuthSuccess: (response: AuthResponse) => {
     // Optionally, persist the token in localStorage or cookies here
-    console.log(response);
     set({ user: response.user, accessToken: response.accessToken, userId: response.user.id, isAuthenticated: true });
   },
   logout: () => {

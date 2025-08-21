@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { OmdbResult, BookResult, WatchedItem } from '../types';
+import type { BookResult, OmdbResult, WatchedItem } from '../types';
 
 interface FormManagerState {
   // Add to watched form state
@@ -51,6 +51,23 @@ export const useFormManager = () => {
     }));
   };
 
+  // TODO: Implement detailed view when clicked on watched item
+  const showWatchedItemForm = (item: WatchedItem) => {
+    setFormState(prev => ({
+      ...prev,
+      showAddToWatchedForm: true,
+      itemToEdit: item,
+    }));
+  };
+
+  const hideWatchedItemForm = () => {
+    setFormState(prev => ({
+      ...prev,
+      showAddToWatchedForm: false,
+      itemToEdit: null,
+    }));
+  };
+
   const resetAllForms = () => {
     setFormState({
       showAddToWatchedForm: false,
@@ -66,6 +83,8 @@ export const useFormManager = () => {
     hideAddForm,
     showEditForm,
     hideEditForm,
+    showWatchedItemForm,
+    hideWatchedItemForm,
     resetAllForms,
   };
 };
