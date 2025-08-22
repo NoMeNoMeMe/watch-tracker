@@ -6,7 +6,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "turbo dev"
+    "dev": "turbo dev",
+    "init": "npm install && cd ./packages/web && npm install && cd ./../server && npm install"
   },
   "keywords": [],
   "author": "Mateusz Witkowski",
